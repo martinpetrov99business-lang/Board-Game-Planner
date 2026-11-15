@@ -1,3 +1,14 @@
 <Solution>
-  <Project Path="Board Game Planner/Board Game Planner.csproj" />
+  <Folder Name="/Data/">
+    <Project Path="BoardGamePlanner.Data.Models/BoardGamePlanner.Data.Models.csproj" Id="12287ee3-405f-4e5d-80ab-4231d28c52ee" />
+    <Project Path="BoardGamePlanner.Data/BoardGamePlanner.Data.csproj" Id="50dee726-9b76-4088-8d0a-c4ec4c8d89a9" />
+  </Folder>
+  <Folder Name="/Services/">
+    <Project Path="BoardGamePlanner.Services.Core/BoardGamePlanner.Services.Core.csproj" Id="e0f2ea27-4ed9-428f-9a2e-97f74ca1775f" />
+  </Folder>
+  <Folder Name="/Web/">
+    <Project Path="Board Game Planner/Board Game Planner.csproj" />
+    <Project Path="BoardGamePlanner.ViewModels/BoardGamePlanner.ViewModels.csproj" Id="8293978a-d4cc-4a4e-a773-9068cda30965" />
+  </Folder>
+  <Project Path="BoardGamePlanner.Common/BoardGamePlanner.Common.csproj" Id="dc5bee09-5cf2-4ec2-ac17-a7568cc9902a" />
 </Solution>

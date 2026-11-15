@@ -17,4 +17,12 @@
     <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="10.0.15" />
   </ItemGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\BoardGamePlanner.Common\BoardGamePlanner.Common.csproj" />
+    <ProjectReference Include="..\BoardGamePlanner.Data.Models\BoardGamePlanner.Data.Models.csproj" />
+    <ProjectReference Include="..\BoardGamePlanner.Data\BoardGamePlanner.Data.csproj" />
+    <ProjectReference Include="..\BoardGamePlanner.Services.Core\BoardGamePlanner.Services.Core.csproj" />
+    <ProjectReference Include="..\BoardGamePlanner.ViewModels\BoardGamePlanner.ViewModels.csproj" />
+  </ItemGroup>
+
 </Project>

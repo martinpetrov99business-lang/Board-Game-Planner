@@ -2,7 +2,7 @@
 
 namespace Board_Game_Planner
 {
-    using Data;
+    using BoardGamePlanner.Data;
     using Microsoft.AspNetCore.Identity;
     using Microsoft.EntityFrameworkCore;
     public class Program
