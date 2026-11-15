@@ -58,6 +58,78 @@ namespace BoardGamePlanner.Data.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("Games");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            Complexity = 2,
+                            Description = "Trade and build settlements on a modular island.",
+                            MaxPlayers = 4,
+                            MinPlayers = 3,
+                            PlayTimeMinutes = 90,
+                            Title = "Catan"
+                        },
+                        new
+                        {
+                            Id = 2,
+                            Complexity = 1,
+                            Description = "Collect train cards and connect cities by building railway routes across the map.",
+                            MaxPlayers = 5,
+                            MinPlayers = 2,
+                            PlayTimeMinutes = 60,
+                            Title = "Ticket to Ride"
+                        },
+                        new
+                        {
+                            Id = 3,
+                            Complexity = 1,
+                            Description = "Build a shared landscape with tiles and place followers to score points.",
+                            MaxPlayers = 5,
+                            MinPlayers = 2,
+                            PlayTimeMinutes = 45,
+                            Title = "Carcassonne"
+                        },
+                        new
+                        {
+                            Id = 4,
+                            Complexity = 2,
+                            Description = "Work together as a team of specialists to contain disease outbreaks around the world.",
+                            MaxPlayers = 4,
+                            MinPlayers = 2,
+                            PlayTimeMinutes = 60,
+                            Title = "Pandemic"
+                        },
+                        new
+                        {
+                            Id = 5,
+                            Complexity = 3,
+                            Description = "Manage resources and develop projects to make Mars suitable for human life.",
+                            MaxPlayers = 5,
+                            MinPlayers = 1,
+                            PlayTimeMinutes = 120,
+                            Title = "Terraforming Mars"
+                        },
+                        new
+                        {
+                            Id = 6,
+                            Complexity = 2,
+                            Description = "Compete in a strategic battle by moving pieces across the board to checkmate your opponent.",
+                            MaxPlayers = 2,
+                            MinPlayers = 2,
+                            PlayTimeMinutes = 30,
+                            Title = "Chess"
+                        },
+                        new
+                        {
+                            Id = 7,
+                            Complexity = 3,
+                            Description = "Explore a fantasy world through tactical cooperative adventures and evolving campaigns.",
+                            MaxPlayers = 4,
+                            MinPlayers = 1,
+                            PlayTimeMinutes = 120,
+                            Title = "Gloomhaven"
+                        });
                 });
 
             modelBuilder.Entity("BoardGamePlanner.Data.Models.GameNight", b =>
@@ -150,6 +222,36 @@ namespace BoardGamePlanner.Data.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("Venues");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            Address = "12 Main Street, Downtown",
+                            Capacity = 30,
+                            Name = "The Dice Tower Café"
+                        },
+                        new
+                        {
+                            Id = 2,
+                            Address = "25 Oak Street, City Center",
+                            Capacity = 50,
+                            Name = "Board Game Paradise"
+                        },
+                        new
+                        {
+                            Id = 3,
+                            Address = "8 River Road, West District",
+                            Capacity = 40,
+                            Name = "The Gaming Hub"
+                        },
+                        new
+                        {
+                            Id = 4,
+                            Address = "17 Park Avenue, East District",
+                            Capacity = 25,
+                            Name = "Meeple House"
+                        });
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRole", b =>
