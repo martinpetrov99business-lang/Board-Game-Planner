@@ -1,6 +1,6 @@
 ﻿namespace BoardGamePlanner.Common
 {
-    public class ValidationConstants
+    public static class ValidationConstants
     {
         public static class Venue
         {

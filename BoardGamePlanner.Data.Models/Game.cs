@@ -24,7 +24,7 @@ namespace BoardGamePlanner.Data.Models
         public Complexity Complexity { get; set; }
         [StringLength(ImageUrlMaxLength)]
         public string? ImageUrl { get; set; }
-        public virtual ICollection<GameNightGame> GameNightGames { get; set; } = new HashSet<GameNightGame>();
+        public virtual ICollection<GameNightGame> GameNightGames { get; set; } = new List<GameNightGame>();
 
 
 

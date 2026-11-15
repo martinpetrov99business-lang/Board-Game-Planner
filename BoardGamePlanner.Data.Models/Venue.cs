@@ -16,6 +16,6 @@ namespace BoardGamePlanner.Data.Models
         [Range(CapacityMin,CapacityMax)]
         public int Capacity { get; set; }
 
-        public virtual ICollection<GameNight> GameNights { get; set; } = new HashSet<GameNight>();
+        public virtual ICollection<GameNight> GameNights { get; set; } = new List<GameNight>();
     }
 }
