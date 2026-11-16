@@ -3,6 +3,7 @@ using BoardGamePlanner.Data.Models;
 using BoardGamePlanner.Services.Core.Contracts;
 using BoardGamePlanner.ViewModels.GameNights;
 using Microsoft.EntityFrameworkCore;
+using System;
 
 namespace BoardGamePlanner.Services.Core
 {
@@ -29,7 +30,7 @@ namespace BoardGamePlanner.Services.Core
 
             return maxGuests <= capacity.Value;
         }
-        public async Task<IEnumerable<GameNightIndexViewModel>> GetAllAsync()
+        public async Task<IEnumerable<GameNightIndexViewModel>> GetAllAsync(string? userId)
         {
             return await dbContext.GameNights
                 .AsNoTracking()
@@ -40,12 +41,15 @@ namespace BoardGamePlanner.Services.Core
                     Title = g.Title,
                     Date = g.Date,
                     VenueName = g.Venue.Name,
-                    MaxGuests = g.MaxGuests
+                    MaxGuests = g.MaxGuests,
+                    SignedUpCount = g.Signups.Count,
+                     IsJoined = userId != null &&
+               g.Signups.Any(s => s.UserId == userId)
                 })
                 .ToListAsync();
         }
 
-        public async Task<GameNightDetailsViewModel?> GetDetailsAsync(int id)
+        public async Task<GameNightDetailsViewModel?> GetDetailsAsync(int id, string? userId)
         {
             return await dbContext.GameNights
                 .AsNoTracking()
@@ -58,7 +62,10 @@ namespace BoardGamePlanner.Services.Core
                     VenueName = g.Venue.Name,
                     VenueAddress = g.Venue.Address,
                     MaxGuests = g.MaxGuests,
-                    Notes = g.Notes
+                    Notes = g.Notes,
+                     SignedUpCount = g.Signups.Count,
+                    IsJoined = userId != null &&
+               g.Signups.Any(s => s.UserId == userId)
                 })
                 .FirstOrDefaultAsync();
         }
@@ -160,6 +167,69 @@ namespace BoardGamePlanner.Services.Core
                 })
                 .ToListAsync();
         }
+
+        public async Task<bool> JoinAsync(int gameNightId, string userId)
+        {
+            GameNight? gameNight = await dbContext.GameNights
+                .FirstOrDefaultAsync(g => g.Id == gameNightId);
+
+            if (gameNight == null || gameNight.Date <= DateTime.Now)
+            {
+                return false;
+            }
+
+            bool alreadyJoined = await dbContext.GameNightSignups
+                .AnyAsync(s => s.GameNightId == gameNightId && s.UserId == userId);
+
+            if (alreadyJoined)
+            {
+                return false;
+            }
+
+            int signupCount = await dbContext.GameNightSignups
+                .CountAsync(s => s.GameNightId == gameNightId);
+
+            if (signupCount >= gameNight.MaxGuests)
+            {
+                return false;
+            }
+
+            GameNightSignup signup = new GameNightSignup
+            {
+                GameNightId = gameNightId,
+                UserId = userId,
+                SignedUpOn = DateTime.UtcNow
+            };
+
+            await dbContext.GameNightSignups.AddAsync(signup);
+            await dbContext.SaveChangesAsync();
+
+            return true;
+        }
+
+        public async Task<bool> LeaveAsync(int gameNightId, string userId)
+        {
+            GameNightSignup? signup = await dbContext.GameNightSignups
+                .FirstOrDefaultAsync(s =>
+                    s.GameNightId == gameNightId && s.UserId == userId);
+
+            if (signup == null)
+            {
+                return false;
+            }
+
+            dbContext.GameNightSignups.Remove(signup);
+            await dbContext.SaveChangesAsync();
+
+            return true;
+        }
+
+        public async Task<bool> IsJoinedAsync(int gameNightId, string userId)
+        {
+            return await dbContext.GameNightSignups
+                .AnyAsync(s => s.GameNightId == gameNightId && s.UserId == userId);
+        }
+
     }
 
 }

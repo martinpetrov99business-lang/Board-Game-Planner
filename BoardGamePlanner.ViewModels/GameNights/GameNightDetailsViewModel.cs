@@ -3,6 +3,7 @@ namespace BoardGamePlanner.ViewModels.GameNights
 {
     public class GameNightDetailsViewModel
     {
+
         public int Id { get; set; }
 
         public string Title { get; set; } = null!;
@@ -16,5 +17,7 @@ namespace BoardGamePlanner.ViewModels.GameNights
         public string? Notes { get; set; }
 
         public string VenueAddress { get; set; } = null!;
+        public int SignedUpCount { get; set; }
+        public bool IsJoined { get; set; }
     }
 }

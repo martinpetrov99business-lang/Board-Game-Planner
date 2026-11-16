@@ -20,13 +20,45 @@
         <dt class="col-sm-3">Venue address</dt>
         <dd class="col-sm-9">@Model.VenueAddress</dd>
 
-        <dt class="col-sm-3">Max guests</dt>
-        <dd class="col-sm-9">@Model.MaxGuests</dd>
+        <dt class="col-sm-3">Guests</dt>
+        <dd class="col-sm-9">@Model.SignedUpCount / @Model.MaxGuests</dd>
 
         <dt class="col-sm-3">Notes</dt>
         <dd class="col-sm-9">@(Model.Notes ?? "No notes provided.")</dd>
     </dl>
 </div>
+@if (User.Identity?.IsAuthenticated != true)
+{
+    <a asp-area="Identity"
+       asp-page="/Account/Login"
+       class="btn btn-primary">
+        Log in to join
+    </a>
+}
+else if (Model.IsJoined)
+{
+    <form asp-action="Leave"
+          asp-route-id="@Model.Id"
+          method="post"
+          class="d-inline">
+        <button type="submit" class="btn btn-danger">Leave</button>
+    </form>
+}
+else if (Model.Date > DateTime.Now && Model.SignedUpCount < Model.MaxGuests)
+{
+    <form asp-action="Join"
+          asp-route-id="@Model.Id"
+          method="post"
+          class="d-inline">
+        <button type="submit" class="btn btn-success">Join</button>
+    </form>
+}
+else
+{
+    <p class="text-muted">
+        This game night is full or has already started.
+    </p>
+}
 
 <a asp-action="Index" class="btn btn-secondary">Back</a>
 

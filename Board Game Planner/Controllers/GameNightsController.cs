@@ -3,6 +3,7 @@ using BoardGamePlanner.Services.Core.Contracts;
 using BoardGamePlanner.ViewModels.GameNights;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using System.Security.Claims;
 
 namespace Board_Game_Planner.Controllers
 {
@@ -19,7 +20,7 @@ namespace Board_Game_Planner.Controllers
         [AllowAnonymous]
         public async Task<IActionResult> Index()
         {
-            var model = await gameNightService.GetAllAsync();
+            var model = await gameNightService.GetAllAsync(GetUserId());
 
             return View(model);
         }
@@ -27,7 +28,7 @@ namespace Board_Game_Planner.Controllers
         [AllowAnonymous]
         public async Task<IActionResult> Details(int id)
         {
-            var model = await gameNightService.GetDetailsAsync(id);
+            var model = await gameNightService.GetDetailsAsync(id, GetUserId());
 
             if (model == null)
             {
@@ -37,7 +38,7 @@ namespace Board_Game_Planner.Controllers
             return View(model);
         }
 
-       
+
         public async Task<IActionResult> Create()
         {
             var model = await gameNightService.GetCreateModelAsync();
@@ -113,7 +114,7 @@ namespace Board_Game_Planner.Controllers
 
         public async Task<IActionResult> Delete(int id)
         {
-            var model = await gameNightService.GetDetailsAsync(id);
+            var model = await gameNightService.GetDetailsAsync(id, null);
 
             if (model == null)
             {
@@ -137,6 +138,67 @@ namespace Board_Game_Planner.Controllers
             }
 
             return RedirectToAction(nameof(Index));
+        }
+        private string? GetUserId() => User.FindFirstValue(ClaimTypes.NameIdentifier);
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Join(int id, bool fromList = false)
+        {
+            string? userId = GetUserId();
+
+            if (userId == null)
+            {
+                return Challenge();
+            }
+
+            bool joined = await gameNightService.JoinAsync(id, userId);
+
+            if (joined)
+            {
+                TempData["Success"] = "You joined this game night.";
+            }
+            else
+            {
+                TempData["Error"] = "Could not join: the night is full, already started, or you already joined.";
+            }
+
+            if (fromList)
+            {
+                return RedirectToAction(nameof(Index));
+            }
+
+            return RedirectToAction(nameof(Details), new { id });
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Leave(int id, bool fromList = false)
+        {
+            string? userId = GetUserId();
+
+            if (userId == null)
+            {
+                return Challenge();
+            }
+
+            bool left = await gameNightService.LeaveAsync(id, userId);
+
+            if (left)
+            {
+                TempData["Success"] = "You left this game night.";
+            }
+            else
+            {
+                TempData["Error"] = "You are not signed up for this night.";
+            }
+
+            if (fromList)
+            {
+                return RedirectToAction(nameof(Index));
+            }
+
+            return RedirectToAction(nameof(Details), new { id });
         }
     }
 }

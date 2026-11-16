@@ -24,7 +24,7 @@
             <th>Title</th>
             <th>Date</th>
             <th>Venue</th>
-            <th>Max guests</th>
+            <th>Guests</th>
             <th></th>
         </tr>
     </thead>
@@ -35,7 +35,7 @@
                 <td>@gameNight.Title</td>
                 <td>@gameNight.Date.ToString("g")</td>
                 <td>@gameNight.VenueName</td>
-                <td>@gameNight.MaxGuests</td>
+                <td>@gameNight.SignedUpCount / @gameNight.MaxGuests</td>
                 <td>
                     <a asp-action="Details"
                        asp-route-id="@gameNight.Id"
@@ -56,6 +56,32 @@
                            class="btn btn-sm btn-danger">
                             Delete
                         </a>
+
+                        @if (gameNight.IsJoined)
+                        {
+                            <form asp-action="Leave"
+                                  asp-route-id="@gameNight.Id"
+                                  asp-route-fromList="true"
+                                  method="post"
+                                  class="d-inline">
+                                <button type="submit" class="btn btn-sm btn-outline-danger">
+                                    Leave
+                                </button>
+                            </form>
+                        }
+                        else if (gameNight.Date > DateTime.Now &&
+                                 gameNight.SignedUpCount < gameNight.MaxGuests)
+                        {
+                            <form asp-action="Join"
+                                  asp-route-id="@gameNight.Id"
+                                  asp-route-fromList="true"
+                                  method="post"
+                                  class="d-inline">
+                                <button type="submit" class="btn btn-sm btn-success">
+                                    Join
+                                </button>
+                            </form>
+                        }
                     }
                 </td>
             </tr>

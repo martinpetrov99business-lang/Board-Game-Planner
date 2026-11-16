@@ -1,13 +1,13 @@
-﻿using BoardGamePlanner.ViewModels.GameNights;
+﻿
+using BoardGamePlanner.ViewModels.GameNights;
 
 namespace BoardGamePlanner.Services.Core.Contracts
 {
     public interface IGameNightService
     {
-        Task<bool> FitsVenueAsync(int venueId, int maxGuests);
-        Task<IEnumerable<GameNightIndexViewModel>> GetAllAsync();
+        Task<IEnumerable<GameNightIndexViewModel>> GetAllAsync(string? userId);
 
-        Task<GameNightDetailsViewModel?> GetDetailsAsync(int id);
+        Task<GameNightDetailsViewModel?> GetDetailsAsync(int id, string? userId);
 
         Task<GameNightFormViewModel> GetCreateModelAsync();
 
@@ -18,5 +18,13 @@ namespace BoardGamePlanner.Services.Core.Contracts
         Task<bool> UpdateAsync(GameNightFormViewModel model);
 
         Task<bool> DeleteAsync(int id);
+
+        Task<bool> FitsVenueAsync(int venueId, int maxGuests);
+
+        Task<bool> JoinAsync(int gameNightId, string userId);
+
+        Task<bool> LeaveAsync(int gameNightId, string userId);
+
+        Task<bool> IsJoinedAsync(int gameNightId, string userId);
     }
 }

@@ -15,5 +15,9 @@ namespace BoardGamePlanner.ViewModels.GameNights
         public string VenueName { get; set; } = null!;
 
         public int MaxGuests { get; set; }
+
+        public int SignedUpCount { get; set; }
+
+        public bool IsJoined { get; set; }
     }
 }
