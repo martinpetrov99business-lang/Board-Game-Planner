@@ -1,4 +1,4 @@
-using Board_Game_Planner.Models;
+using BoardGamePlanner.ViewModels.Shared;
 using Microsoft.AspNetCore.Mvc;
 using System.Diagnostics;
 

@@ -1,7 +1,6 @@
-﻿using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
-using BoardGamePlanner.Common;
+﻿using System.ComponentModel.DataAnnotations;
 using static BoardGamePlanner.Common.ValidationConstants.GameNight;
+using BoardGamePlanner.ViewModels.Validation;
 
 namespace BoardGamePlanner.ViewModels.GameNights
 {
@@ -10,7 +9,7 @@ namespace BoardGamePlanner.ViewModels.GameNights
         public int Id { get; set; }
         [Required, StringLength(TitleMaxLength, MinimumLength = TitleMinLength)]
         public string Title { get; set; } = null!;
-        
+        [FutureDate(ErrorMessage = "The game night date must be in the future.")]
         [Required,DisplayFormat(DataFormatString = "{0:yyyy-MM-ddTHH:mm}", ApplyFormatInEditMode = true)]
         public DateTime Date { get; set; }
 

@@ -50,20 +50,24 @@ namespace Board_Game_Planner.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create(GameNightFormViewModel model)
         {
+            if (!await gameNightService.FitsVenueAsync(model.VenueId, model.MaxGuests))
+            {
+                ModelState.AddModelError(nameof(model.MaxGuests),
+                    "Max guests cannot exceed the venue's capacity.");
+            }
+
             if (!ModelState.IsValid)
             {
                 var fresh = await gameNightService.GetCreateModelAsync();
                 model.Venues = fresh.Venues;
-
                 return View(model);
             }
 
             int id = await gameNightService.CreateAsync(model);
-
             return RedirectToAction(nameof(Details), new { id });
         }
 
-      
+
         public async Task<IActionResult> Edit(int id)
         {
             var model = await gameNightService.GetEditModelAsync(id);
@@ -80,12 +84,18 @@ namespace Board_Game_Planner.Controllers
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(GameNightFormViewModel model)
+
         {
+            if (!await gameNightService.FitsVenueAsync(model.VenueId, model.MaxGuests))
+            {
+                ModelState.AddModelError(nameof(model.MaxGuests),
+                    "Max guests cannot exceed the venue's capacity.");
+            }
+
             if (!ModelState.IsValid)
             {
                 var fresh = await gameNightService.GetCreateModelAsync();
                 model.Venues = fresh.Venues;
-
                 return View(model);
             }
 
@@ -99,7 +109,8 @@ namespace Board_Game_Planner.Controllers
             return RedirectToAction(nameof(Details), new { id = model.Id });
         }
 
-     
+
+
         public async Task<IActionResult> Delete(int id)
         {
             var model = await gameNightService.GetDetailsAsync(id);

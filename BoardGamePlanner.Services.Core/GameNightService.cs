@@ -8,13 +8,27 @@ namespace BoardGamePlanner.Services.Core
 {
     public class GameNightService : IGameNightService
     {
+
         private readonly ApplicationDbContext dbContext;
 
         public GameNightService(ApplicationDbContext dbContext)
         {
             this.dbContext = dbContext;
         }
+        public async Task<bool> FitsVenueAsync(int venueId, int maxGuests)
+        {
+            int? capacity = await dbContext.Venues
+                .Where(v => v.Id == venueId)
+                .Select(v => (int?)v.Capacity)
+                .FirstOrDefaultAsync();
 
+            if (capacity == null)
+            {
+                return false;
+            }
+
+            return maxGuests <= capacity.Value;
+        }
         public async Task<IEnumerable<GameNightIndexViewModel>> GetAllAsync()
         {
             return await dbContext.GameNights

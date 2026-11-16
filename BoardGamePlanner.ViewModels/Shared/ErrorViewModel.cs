@@ -1,4 +1,4 @@
-namespace Board_Game_Planner.Models
+namespace BoardGamePlanner.ViewModels.Shared
 {
     public class ErrorViewModel
     {
