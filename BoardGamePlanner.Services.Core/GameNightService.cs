@@ -53,6 +53,7 @@ namespace BoardGamePlanner.Services.Core
         {
             return new GameNightFormViewModel
             {
+                Date = DateTime.Today.AddDays(7).AddHours(19),
                 Venues = await GetVenuesAsync()
             };
         }

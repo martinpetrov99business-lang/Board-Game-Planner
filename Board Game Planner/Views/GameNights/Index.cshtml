@@ -1,0 +1,64 @@
+﻿@model IEnumerable<GameNightIndexViewModel>
+
+@{
+    ViewData["Title"] = "Game Nights";
+}
+
+<h1>Game Nights</h1>
+
+@if (User.Identity?.IsAuthenticated == true)
+{
+    <p>
+        <a asp-action="Create" class="btn btn-primary">
+            Create Game Night
+        </a>
+    </p>
+}
+@if (!Model.Any())
+{
+    <p>No game nights yet.</p>
+}
+<table class="table table-striped">
+    <thead>
+        <tr>
+            <th>Title</th>
+            <th>Date</th>
+            <th>Venue</th>
+            <th>Max guests</th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var gameNight in Model)
+        {
+            <tr>
+                <td>@gameNight.Title</td>
+                <td>@gameNight.Date.ToString("g")</td>
+                <td>@gameNight.VenueName</td>
+                <td>@gameNight.MaxGuests</td>
+                <td>
+                    <a asp-action="Details"
+                       asp-route-id="@gameNight.Id"
+                       class="btn btn-sm btn-info">
+                        Details
+                    </a>
+
+                    @if (User.Identity?.IsAuthenticated == true)
+                    {
+                        <a asp-action="Edit"
+                           asp-route-id="@gameNight.Id"
+                           class="btn btn-sm btn-warning">
+                            Edit
+                        </a>
+
+                        <a asp-action="Delete"
+                           asp-route-id="@gameNight.Id"
+                           class="btn btn-sm btn-danger">
+                            Delete
+                        </a>
+                    }
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
