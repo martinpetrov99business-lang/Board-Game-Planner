@@ -24,6 +24,7 @@ namespace Board_Game_Planner
                 .AddEntityFrameworkStores<ApplicationDbContext>();
             builder.Services.AddControllersWithViews();
             builder.Services.AddScoped<IGameNightService, GameNightService>();
+            builder.Services.AddScoped<IGameService, GameService>();
 
             var app = builder.Build();
 
