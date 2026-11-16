@@ -11,9 +11,11 @@ namespace BoardGamePlanner.ViewModels.GameNights
         [Required, StringLength(TitleMaxLength, MinimumLength = TitleMinLength)]
         public string Title { get; set; } = null!;
         
-        [Required, DataType(DataType.DateTime)]
+        [Required,DisplayFormat(DataFormatString = "{0:yyyy-MM-ddTHH:mm}", ApplyFormatInEditMode = true)]
         public DateTime Date { get; set; }
+
         [Range(MaxGuestsMin, MaxGuestsMax)]
+        [Display(Name = "Max guests")]
         public int MaxGuests { get; set; }
 
         [StringLength(NotesMaxLength)]

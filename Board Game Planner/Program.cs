@@ -5,6 +5,9 @@ namespace Board_Game_Planner
     using BoardGamePlanner.Data;
     using Microsoft.AspNetCore.Identity;
     using Microsoft.EntityFrameworkCore;
+    using BoardGamePlanner.Services.Core;
+    using BoardGamePlanner.Services.Core.Contracts;
+
     public class Program
     {
         public static void Main(string[] args)
@@ -20,6 +23,7 @@ namespace Board_Game_Planner
             builder.Services.AddDefaultIdentity<IdentityUser>(options => options.SignIn.RequireConfirmedAccount = false)
                 .AddEntityFrameworkStores<ApplicationDbContext>();
             builder.Services.AddControllersWithViews();
+            builder.Services.AddScoped<IGameNightService, GameNightService>();
 
             var app = builder.Build();
 
