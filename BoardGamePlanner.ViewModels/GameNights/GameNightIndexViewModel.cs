@@ -19,5 +19,7 @@ namespace BoardGamePlanner.ViewModels.GameNights
         public int SignedUpCount { get; set; }
 
         public bool IsJoined { get; set; }
+
+        public bool IsCreator { get; set; }
     }
 }

@@ -62,7 +62,7 @@ else
 
 <a asp-action="Index" class="btn btn-secondary">Back</a>
 
-@if (User.Identity?.IsAuthenticated == true)
+@if (Model.IsCreator)
 {
     <a asp-action="Edit"
        asp-route-id="@Model.Id"

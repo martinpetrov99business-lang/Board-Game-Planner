@@ -64,13 +64,26 @@ namespace Board_Game_Planner.Controllers
                 return View(model);
             }
 
-            int id = await gameNightService.CreateAsync(model);
+            string? userId = GetUserId();
+
+            if (userId == null)
+            {
+                return Challenge();
+            }
+
+            int id = await gameNightService.CreateAsync(model, userId);
             return RedirectToAction(nameof(Details), new { id });
         }
 
 
         public async Task<IActionResult> Edit(int id)
         {
+            string? userId = GetUserId();
+
+            if (userId == null || !await gameNightService.IsCreatorAsync(id, userId))
+            {
+                return Forbid();
+            }
             var model = await gameNightService.GetEditModelAsync(id);
 
             if (model == null)
@@ -87,6 +100,13 @@ namespace Board_Game_Planner.Controllers
         public async Task<IActionResult> Edit(GameNightFormViewModel model)
 
         {
+            string? userId = GetUserId();
+
+            if (userId == null || !await gameNightService.IsCreatorAsync(model.Id, userId))
+            {
+                return Forbid();
+            }
+
             if (!await gameNightService.FitsVenueAsync(model.VenueId, model.MaxGuests))
             {
                 ModelState.AddModelError(nameof(model.MaxGuests),
@@ -114,6 +134,13 @@ namespace Board_Game_Planner.Controllers
 
         public async Task<IActionResult> Delete(int id)
         {
+            string? userId = GetUserId();
+
+            if (userId == null || !await gameNightService.IsCreatorAsync(id, userId))
+            {
+                return Forbid();
+            }
+
             var model = await gameNightService.GetDetailsAsync(id, null);
 
             if (model == null)
@@ -130,6 +157,13 @@ namespace Board_Game_Planner.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
+            string? userId = GetUserId();
+
+            if (userId == null || !await gameNightService.IsCreatorAsync(id, userId))
+            {
+                return Forbid();
+            }
+
             bool deleted = await gameNightService.DeleteAsync(id);
 
             if (!deleted)

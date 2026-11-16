@@ -44,7 +44,8 @@ namespace BoardGamePlanner.Services.Core
                     MaxGuests = g.MaxGuests,
                     SignedUpCount = g.Signups.Count,
                      IsJoined = userId != null &&
-               g.Signups.Any(s => s.UserId == userId)
+               g.Signups.Any(s => s.UserId == userId),
+               IsCreator = userId != null && g.CreatorId == userId
                 })
                 .ToListAsync();
         }
@@ -65,7 +66,8 @@ namespace BoardGamePlanner.Services.Core
                     Notes = g.Notes,
                      SignedUpCount = g.Signups.Count,
                     IsJoined = userId != null &&
-               g.Signups.Any(s => s.UserId == userId)
+               g.Signups.Any(s => s.UserId == userId),
+                    IsCreator = userId != null && g.CreatorId == userId
                 })
                 .FirstOrDefaultAsync();
         }
@@ -79,7 +81,7 @@ namespace BoardGamePlanner.Services.Core
             };
         }
 
-        public async Task<int> CreateAsync(GameNightFormViewModel model)
+        public async Task<int> CreateAsync(GameNightFormViewModel model, string userId)
         {
             GameNight gameNight = new GameNight
             {
@@ -87,7 +89,8 @@ namespace BoardGamePlanner.Services.Core
                 Date = model.Date,
                 Notes = model.Notes,
                 MaxGuests = model.MaxGuests,
-                VenueId = model.VenueId
+                VenueId = model.VenueId,
+                CreatorId = userId
             };
 
             await dbContext.GameNights.AddAsync(gameNight);
@@ -228,6 +231,11 @@ namespace BoardGamePlanner.Services.Core
         {
             return await dbContext.GameNightSignups
                 .AnyAsync(s => s.GameNightId == gameNightId && s.UserId == userId);
+        }
+        public async Task<bool> IsCreatorAsync(int gameNightId, string userId)
+        {
+            return await dbContext.GameNights
+                .AnyAsync(g => g.Id == gameNightId && g.CreatorId == userId);
         }
 
     }

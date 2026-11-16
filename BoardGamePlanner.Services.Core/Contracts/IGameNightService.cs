@@ -11,7 +11,9 @@ namespace BoardGamePlanner.Services.Core.Contracts
 
         Task<GameNightFormViewModel> GetCreateModelAsync();
 
-        Task<int> CreateAsync(GameNightFormViewModel model);
+        Task<int> CreateAsync(GameNightFormViewModel model, string userId);
+
+        Task<bool> IsCreatorAsync(int gameNightId, string userId);
 
         Task<GameNightFormViewModel?> GetEditModelAsync(int id);
 

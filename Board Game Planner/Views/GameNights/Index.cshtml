@@ -14,10 +14,12 @@
         </a>
     </p>
 }
+
 @if (!Model.Any())
 {
     <p>No game nights yet.</p>
 }
+
 <table class="table table-striped">
     <thead>
         <tr>
@@ -45,17 +47,20 @@
 
                     @if (User.Identity?.IsAuthenticated == true)
                     {
-                        <a asp-action="Edit"
-                           asp-route-id="@gameNight.Id"
-                           class="btn btn-sm btn-warning">
-                            Edit
-                        </a>
+                        @if (gameNight.IsCreator)
+                        {
+                            <a asp-action="Edit"
+                               asp-route-id="@gameNight.Id"
+                               class="btn btn-sm btn-warning">
+                                Edit
+                            </a>
 
-                        <a asp-action="Delete"
-                           asp-route-id="@gameNight.Id"
-                           class="btn btn-sm btn-danger">
-                            Delete
-                        </a>
+                            <a asp-action="Delete"
+                               asp-route-id="@gameNight.Id"
+                               class="btn btn-sm btn-danger">
+                                Delete
+                            </a>
+                        }
 
                         @if (gameNight.IsJoined)
                         {
