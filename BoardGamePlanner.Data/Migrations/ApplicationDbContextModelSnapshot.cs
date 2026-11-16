@@ -140,6 +140,10 @@ namespace BoardGamePlanner.Data.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
+                    b.Property<string>("CreatorId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(450)");
+
                     b.Property<DateTime>("Date")
                         .HasColumnType("datetime2");
 
@@ -159,6 +163,8 @@ namespace BoardGamePlanner.Data.Migrations
                         .HasColumnType("int");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("CreatorId");
 
                     b.HasIndex("VenueId");
 
@@ -458,11 +464,19 @@ namespace BoardGamePlanner.Data.Migrations
 
             modelBuilder.Entity("BoardGamePlanner.Data.Models.GameNight", b =>
                 {
+                    b.HasOne("Microsoft.AspNetCore.Identity.IdentityUser", "Creator")
+                        .WithMany()
+                        .HasForeignKey("CreatorId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
                     b.HasOne("BoardGamePlanner.Data.Models.Venue", "Venue")
                         .WithMany("GameNights")
                         .HasForeignKey("VenueId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
+
+                    b.Navigation("Creator");
 
                     b.Navigation("Venue");
                 });

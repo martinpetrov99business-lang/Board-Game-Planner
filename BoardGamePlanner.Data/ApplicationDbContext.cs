@@ -66,6 +66,12 @@ namespace BoardGamePlanner.Data
                 .WithMany()
                 .HasForeignKey(x => x.UserId)
                 .OnDelete(DeleteBehavior.Cascade);
+            builder.Entity<GameNight>()
+                 .HasOne(g => g.Creator)
+                 .WithMany()
+                 .HasForeignKey(g => g.CreatorId)
+                 .OnDelete(DeleteBehavior.Restrict);
+
 
             builder.Entity<Venue>().HasData(
              new Venue { Id = 1, Name = "The Dice Tower Café", Address = "12 Main Street, Downtown", Capacity = 30 },

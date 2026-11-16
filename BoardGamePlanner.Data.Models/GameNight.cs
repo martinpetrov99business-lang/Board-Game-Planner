@@ -1,6 +1,7 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using static BoardGamePlanner.Common.ValidationConstants.GameNight;
+using Microsoft.AspNetCore.Identity;
 namespace BoardGamePlanner.Data.Models
 {
     public class GameNight
@@ -19,6 +20,12 @@ namespace BoardGamePlanner.Data.Models
         public int VenueId { get; set; }
 
         public virtual Venue Venue { get; set; } = null!;
+
+        [Required]
+        public string CreatorId { get; set; } = null!;
+
+        [ForeignKey(nameof(CreatorId))]
+        public virtual IdentityUser Creator { get; set; } = null!;
 
         public virtual ICollection<GameNightGame> GameNightGames { get; set; } = new List<GameNightGame>();
 
