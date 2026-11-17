@@ -25,6 +25,29 @@
 
         <dt class="col-sm-3">Notes</dt>
         <dd class="col-sm-9">@(Model.Notes ?? "No notes provided.")</dd>
+
+        <dt class="col-sm-3">Games</dt>
+        <dd class="col-sm-9">
+            @if (Model.Games.Any())
+            {
+                <ul class="list-unstyled mb-0">
+                    @foreach (var game in Model.Games)
+                    {
+                        <li>
+                            <a asp-controller="Games"
+                               asp-action="Details"
+                               asp-route-id="@game.Id">
+                                @game.Title
+                            </a>
+                        </li>
+                    }
+                </ul>
+            }
+            else
+            {
+                <span class="text-muted">No games chosen yet.</span>
+            }
+        </dd>
     </dl>
 </div>
 @if (User.Identity?.IsAuthenticated != true)

@@ -50,6 +50,35 @@
               class="text-danger"></span>
     </div>
 
+    <div class="mb-3">
+        <label class="form-label">Games</label>
+
+        <span asp-validation-for="SelectedGameIds" class="text-danger d-block"></span>
+
+        @if (!Model.AvailableGames.Any())
+        {
+            <p class="text-muted">
+                No games available yet. Add some on the Games page.
+            </p>
+        }
+
+        @foreach (var game in Model.AvailableGames)
+        {
+            <div class="form-check">
+                <input class="form-check-input"
+                       type="checkbox"
+                       name="SelectedGameIds"
+                       value="@game.Id"
+                       id="game-@game.Id"
+                       checked="@Model.SelectedGameIds.Contains(game.Id)" />
+
+                <label class="form-check-label" for="game-@game.Id">
+                    @game.Title
+                </label>
+            </div>
+        }
+    </div>
+
     <button type="submit" class="btn btn-primary">
         Save
     </button>

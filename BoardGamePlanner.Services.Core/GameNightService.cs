@@ -3,7 +3,7 @@ using BoardGamePlanner.Data.Models;
 using BoardGamePlanner.Services.Core.Contracts;
 using BoardGamePlanner.ViewModels.GameNights;
 using Microsoft.EntityFrameworkCore;
-using System;
+
 
 namespace BoardGamePlanner.Services.Core
 {
@@ -67,7 +67,15 @@ namespace BoardGamePlanner.Services.Core
                      SignedUpCount = g.Signups.Count,
                     IsJoined = userId != null &&
                g.Signups.Any(s => s.UserId == userId),
-                    IsCreator = userId != null && g.CreatorId == userId
+                    IsCreator = userId != null && g.CreatorId == userId,
+
+                    Games = g.GameNightGames
+                .Select(x => new GameOptionViewModel
+                 {
+                      Id = x.Game.Id,
+                      Title = x.Game.Title
+                 })
+                .ToList()
                 })
                 .FirstOrDefaultAsync();
         }
@@ -77,7 +85,8 @@ namespace BoardGamePlanner.Services.Core
             return new GameNightFormViewModel
             {
                 Date = DateTime.Today.AddDays(7).AddHours(19),
-                Venues = await GetVenuesAsync()
+                Venues = await GetVenuesAsync(),
+                AvailableGames = await GetGamesAsync()
             };
         }
 
@@ -92,6 +101,19 @@ namespace BoardGamePlanner.Services.Core
                 VenueId = model.VenueId,
                 CreatorId = userId
             };
+
+            List<int> validIds = await dbContext.Games
+                .Where(g => model.SelectedGameIds.Contains(g.Id))
+                .Select(g => g.Id)
+                .ToListAsync();
+
+            foreach (int gameId in validIds)
+            {
+                gameNight.GameNightGames.Add(new GameNightGame
+                {
+                    GameId = gameId
+                });
+            }
 
             await dbContext.GameNights.AddAsync(gameNight);
             await dbContext.SaveChangesAsync();
@@ -118,14 +140,21 @@ namespace BoardGamePlanner.Services.Core
                 Notes = gameNight.Notes,
                 MaxGuests = gameNight.MaxGuests,
                 VenueId = gameNight.VenueId,
-                Venues = await GetVenuesAsync()
+                Venues = await GetVenuesAsync(),
+                AvailableGames = await GetGamesAsync(),
+
+                SelectedGameIds = await dbContext.GameNightGames
+        .Where(x => x.GameNightId == id)
+        .Select(x => x.GameId)
+        .ToListAsync()
             };
         }
 
         public async Task<bool> UpdateAsync(GameNightFormViewModel model)
         {
             GameNight? gameNight = await dbContext.GameNights
-                .FindAsync(model.Id);
+        .Include(g => g.GameNightGames)
+        .FirstOrDefaultAsync(g => g.Id == model.Id);
 
             if (gameNight == null)
             {
@@ -137,6 +166,21 @@ namespace BoardGamePlanner.Services.Core
             gameNight.Notes = model.Notes;
             gameNight.MaxGuests = model.MaxGuests;
             gameNight.VenueId = model.VenueId;
+
+            dbContext.GameNightGames.RemoveRange(gameNight.GameNightGames);
+
+            List<int> validIds = await dbContext.Games
+                .Where(g => model.SelectedGameIds.Contains(g.Id))
+                .Select(g => g.Id)
+                .ToListAsync();
+
+            foreach (int gameId in validIds)
+            {
+                gameNight.GameNightGames.Add(new GameNightGame
+                {
+                    GameId = gameId
+                });
+            }
 
             await dbContext.SaveChangesAsync();
 
@@ -167,6 +211,19 @@ namespace BoardGamePlanner.Services.Core
                 {
                     Id = v.Id,
                     Name = v.Name
+                })
+                .ToListAsync();
+        }
+
+        private async Task<IEnumerable<GameOptionViewModel>> GetGamesAsync()
+        {
+            return await dbContext.Games
+                .AsNoTracking()
+                .OrderBy(g => g.Title)
+                .Select(g => new GameOptionViewModel
+                {
+                    Id = g.Id,
+                    Title = g.Title
                 })
                 .ToListAsync();
         }

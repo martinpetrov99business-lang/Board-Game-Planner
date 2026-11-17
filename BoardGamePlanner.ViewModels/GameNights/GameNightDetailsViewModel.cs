@@ -21,5 +21,6 @@ namespace BoardGamePlanner.ViewModels.GameNights
         public bool IsJoined { get; set; }
 
         public bool IsCreator { get; set; }
+        public IEnumerable<GameOptionViewModel> Games { get; set; } = [];
     }
 }

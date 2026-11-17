@@ -24,6 +24,11 @@ namespace BoardGamePlanner.ViewModels.GameNights
         [Display(Name = "Venue")]
         public int VenueId { get; set; }
 
+        [MinLength(1, ErrorMessage = "Please select at least one game.")]
+        public List<int> SelectedGameIds { get; set; } = new List<int>();
+
+        public IEnumerable<GameOptionViewModel> AvailableGames { get; set; } = new List<GameOptionViewModel>();
+
         public IEnumerable<VenueOptionViewModel> Venues { get; set; } = new List<VenueOptionViewModel>();
     }
 }

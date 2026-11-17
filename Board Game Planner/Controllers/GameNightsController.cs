@@ -61,6 +61,7 @@ namespace Board_Game_Planner.Controllers
             {
                 var fresh = await gameNightService.GetCreateModelAsync();
                 model.Venues = fresh.Venues;
+                model.AvailableGames = fresh.AvailableGames;
                 return View(model);
             }
 
@@ -117,6 +118,7 @@ namespace Board_Game_Planner.Controllers
             {
                 var fresh = await gameNightService.GetCreateModelAsync();
                 model.Venues = fresh.Venues;
+                model.AvailableGames = fresh.AvailableGames;
                 return View(model);
             }
 
