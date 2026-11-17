@@ -38,7 +38,7 @@ namespace Board_Game_Planner.Controllers
             return View(model);
         }
 
-
+        [HttpGet]
         public async Task<IActionResult> Create()
         {
             var model = await gameNightService.GetCreateModelAsync();
@@ -75,7 +75,7 @@ namespace Board_Game_Planner.Controllers
             return RedirectToAction(nameof(Details), new { id });
         }
 
-
+        [HttpGet]
         public async Task<IActionResult> Edit(int id)
         {
             string? userId = GetUserId();
@@ -131,7 +131,7 @@ namespace Board_Game_Planner.Controllers
         }
 
 
-
+        [HttpGet]
         public async Task<IActionResult> Delete(int id)
         {
             string? userId = GetUserId();

@@ -21,5 +21,7 @@ namespace BoardGamePlanner.ViewModels.Games
         public string? Description { get; set; }
 
         public string? ImageUrl { get; set; }
+
+        public bool IsCreator { get; set; }
     }
 }

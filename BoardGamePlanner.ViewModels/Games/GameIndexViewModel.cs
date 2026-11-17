@@ -15,6 +15,10 @@ namespace BoardGamePlanner.ViewModels.Games
 
         public int PlayTimeMinutes { get; set; }
 
+        public bool IsCreator { get; set; }
+
         public Complexity Complexity { get; set; }
+
+        
     }
 }

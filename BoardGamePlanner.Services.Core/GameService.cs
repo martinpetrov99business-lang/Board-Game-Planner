@@ -16,7 +16,7 @@ namespace BoardGamePlanner.Services.Core
             this.dbContext = dbContext;
         }
 
-        public async Task<IEnumerable<GameIndexViewModel>> GetAllAsync()
+        public async Task<IEnumerable<GameIndexViewModel>> GetAllAsync(string? userId)
         {
             return await dbContext.Games
                 .AsNoTracking()
@@ -28,12 +28,13 @@ namespace BoardGamePlanner.Services.Core
                     MinPlayers = g.MinPlayers,
                     MaxPlayers = g.MaxPlayers,
                     PlayTimeMinutes = g.PlayTimeMinutes,
-                    Complexity = g.Complexity
+                    Complexity = g.Complexity,
+                    IsCreator = userId != null && g.CreatorId == userId
                 })
                 .ToListAsync();
         }
 
-        public async Task<GameDetailsViewModel?> GetDetailsAsync(int id)
+        public async Task<GameDetailsViewModel?> GetDetailsAsync(int id, string? userId)
         {
             return await dbContext.Games
                 .AsNoTracking()
@@ -47,7 +48,8 @@ namespace BoardGamePlanner.Services.Core
                     PlayTimeMinutes = g.PlayTimeMinutes,
                     Complexity = g.Complexity,
                     Description = g.Description,
-                    ImageUrl = g.ImageUrl
+                    ImageUrl = g.ImageUrl,
+                    IsCreator = userId != null && g.CreatorId == userId
                 })
                 .FirstOrDefaultAsync();
         }
@@ -76,7 +78,7 @@ namespace BoardGamePlanner.Services.Core
             };
         }
 
-        public async Task<int> CreateAsync(GameFormViewModel model)
+        public async Task<int> CreateAsync(GameFormViewModel model, string userId)
         {
             Game game = new Game
             {
@@ -86,7 +88,8 @@ namespace BoardGamePlanner.Services.Core
                 MaxPlayers = model.MaxPlayers,
                 PlayTimeMinutes = model.PlayTimeMinutes,
                 Complexity = model.Complexity,
-                ImageUrl = model.ImageUrl
+                ImageUrl = model.ImageUrl,
+                CreatorId = userId
             };
 
             await dbContext.Games.AddAsync(game);
@@ -131,6 +134,17 @@ namespace BoardGamePlanner.Services.Core
             await dbContext.SaveChangesAsync();
 
             return true;
+        }
+        public async Task<bool> IsCreatorAsync(int gameId, string userId)
+        {
+            return await dbContext.Games
+                .AnyAsync(g => g.Id == gameId && g.CreatorId == userId);
+        }
+
+        public async Task<bool> IsInUseAsync(int gameId)
+        {
+            return await dbContext.GameNightGames
+                .AnyAsync(x => x.GameId == gameId);
         }
     }
 }
