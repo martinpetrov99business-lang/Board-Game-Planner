@@ -299,10 +299,7 @@ namespace BoardGamePlanner.Services.Core
             return await dbContext.GameNightSignups.CountAsync(s => s.GameNightId == gameNightId);
         }
 
-        public async Task<bool> IsJoinedAsync(int gameNightId, string userId)
-        {
-            return await dbContext.GameNightSignups.AnyAsync(s => s.GameNightId == gameNightId && s.UserId == userId);
-        }
+        
         public async Task<bool> IsCreatorAsync(int gameNightId, string userId)
         {
             return await dbContext.GameNights.AnyAsync(g => g.Id == gameNightId && g.CreatorId == userId);

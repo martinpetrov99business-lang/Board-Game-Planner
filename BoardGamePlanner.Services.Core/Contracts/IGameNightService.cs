@@ -27,8 +27,6 @@ namespace BoardGamePlanner.Services.Core.Contracts
 
         Task<bool> LeaveAsync(int gameNightId, string userId);
 
-        Task<bool> IsJoinedAsync(int gameNightId, string userId);
-
         Task<int> GetSignupCountAsync(int gameNightId);
 
         Task<IEnumerable<string>> GetGamesNeedingMorePlayersAsync( IEnumerable<int> gameIds, int maxGuests);
