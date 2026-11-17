@@ -1,8 +1,34 @@
 ﻿@{
-    ViewData["Title"] = "Home Page";
+    ViewData["Title"] = "Home";
 }
 
-<div class="text-center">
-    <h1 class="display-4">Welcome</h1>
-    <p>Learn about <a href="https://learn.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
+<div class="text-center py-5">
+    <h1 class="display-4">Board Game Planner</h1>
+    <p class="lead">Plan game nights, pick the games and see who's coming.</p>
+
+    <a asp-controller="GameNights" asp-action="Index" class="btn btn-primary btn-lg">Browse Game Nights</a>
+    <a asp-controller="Games" asp-action="Index" class="btn btn-outline-primary btn-lg">Browse Games</a>
 </div>
+
+<div class="row text-center mt-4">
+    <div class="col-md-4 mb-3">
+        <h4>Plan</h4>
+        <p>Pick a date, a venue and the games you want to play.</p>
+    </div>
+    <div class="col-md-4 mb-3">
+        <h4>Invite</h4>
+        <p>Friends join your night until every seat is taken.</p>
+    </div>
+    <div class="col-md-4 mb-3">
+        <h4>Play</h4>
+        <p>Show up, roll the dice and enjoy the game.</p>
+    </div>
+</div>
+
+@if (User.Identity?.IsAuthenticated != true)
+{
+    <p class="text-center text-muted">
+        <a asp-area="Identity" asp-page="/Account/Register">Register</a> or
+        <a asp-area="Identity" asp-page="/Account/Login">log in</a> to create or join a game night.
+    </p>
+}
