@@ -66,11 +66,18 @@ namespace BoardGamePlanner.Data
                 .WithMany()
                 .HasForeignKey(x => x.UserId)
                 .OnDelete(DeleteBehavior.Cascade);
+
             builder.Entity<GameNight>()
                  .HasOne(g => g.Creator)
                  .WithMany()
                  .HasForeignKey(g => g.CreatorId)
                  .OnDelete(DeleteBehavior.Restrict);
+
+            builder.Entity<Game>()
+                   .HasOne(g => g.Creator)
+                   .WithMany()
+                   .HasForeignKey(g => g.CreatorId)
+                   .OnDelete(DeleteBehavior.Restrict);
 
 
             builder.Entity<Venue>().HasData(

@@ -1,4 +1,5 @@
-﻿
+﻿using Microsoft.AspNetCore.Identity;
+using System.ComponentModel.DataAnnotations.Schema;
 using BoardGamePlanner.Common;
 using System.ComponentModel.DataAnnotations;
 using static BoardGamePlanner.Common.ValidationConstants.Game;
@@ -24,6 +25,10 @@ namespace BoardGamePlanner.Data.Models
         public Complexity Complexity { get; set; }
         [StringLength(ImageUrlMaxLength)]
         public string? ImageUrl { get; set; }
+        public string? CreatorId { get; set; }
+
+        [ForeignKey(nameof(CreatorId))]
+        public virtual IdentityUser? Creator { get; set; }
         public virtual ICollection<GameNightGame> GameNightGames { get; set; } = new List<GameNightGame>();
 
 

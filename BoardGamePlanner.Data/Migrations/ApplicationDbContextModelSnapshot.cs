@@ -33,6 +33,9 @@ namespace BoardGamePlanner.Data.Migrations
                     b.Property<int>("Complexity")
                         .HasColumnType("int");
 
+                    b.Property<string>("CreatorId")
+                        .HasColumnType("nvarchar(450)");
+
                     b.Property<string>("Description")
                         .HasMaxLength(1000)
                         .HasColumnType("nvarchar(1000)");
@@ -56,6 +59,8 @@ namespace BoardGamePlanner.Data.Migrations
                         .HasColumnType("nvarchar(100)");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("CreatorId");
 
                     b.ToTable("Games");
 
@@ -460,6 +465,16 @@ namespace BoardGamePlanner.Data.Migrations
                     b.HasKey("UserId", "LoginProvider", "Name");
 
                     b.ToTable("AspNetUserTokens", (string)null);
+                });
+
+            modelBuilder.Entity("BoardGamePlanner.Data.Models.Game", b =>
+                {
+                    b.HasOne("Microsoft.AspNetCore.Identity.IdentityUser", "Creator")
+                        .WithMany()
+                        .HasForeignKey("CreatorId")
+                        .OnDelete(DeleteBehavior.Restrict);
+
+                    b.Navigation("Creator");
                 });
 
             modelBuilder.Entity("BoardGamePlanner.Data.Models.GameNight", b =>
