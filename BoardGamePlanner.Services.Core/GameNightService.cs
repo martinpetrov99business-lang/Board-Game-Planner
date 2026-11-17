@@ -227,6 +227,18 @@ namespace BoardGamePlanner.Services.Core
                 })
                 .ToListAsync();
         }
+        public async Task<IEnumerable<string>> GetGamesNeedingMorePlayersAsync(
+    IEnumerable<int> gameIds, int maxGuests)
+        {
+            List<int> ids = gameIds.ToList();
+
+            return await dbContext.Games
+                .AsNoTracking()
+                .Where(g => ids.Contains(g.Id) && g.MinPlayers > maxGuests)
+                .OrderBy(g => g.Title)
+                .Select(g => g.Title)
+                .ToListAsync();
+        }
 
         public async Task<bool> JoinAsync(int gameNightId, string userId)
         {
@@ -270,8 +282,7 @@ namespace BoardGamePlanner.Services.Core
         public async Task<bool> LeaveAsync(int gameNightId, string userId)
         {
             GameNightSignup? signup = await dbContext.GameNightSignups
-                .FirstOrDefaultAsync(s =>
-                    s.GameNightId == gameNightId && s.UserId == userId);
+                .FirstOrDefaultAsync(s => s.GameNightId == gameNightId && s.UserId == userId);
 
             if (signup == null)
             {
@@ -283,16 +294,18 @@ namespace BoardGamePlanner.Services.Core
 
             return true;
         }
+        public async Task<int> GetSignupCountAsync(int gameNightId)
+        {
+            return await dbContext.GameNightSignups.CountAsync(s => s.GameNightId == gameNightId);
+        }
 
         public async Task<bool> IsJoinedAsync(int gameNightId, string userId)
         {
-            return await dbContext.GameNightSignups
-                .AnyAsync(s => s.GameNightId == gameNightId && s.UserId == userId);
+            return await dbContext.GameNightSignups.AnyAsync(s => s.GameNightId == gameNightId && s.UserId == userId);
         }
         public async Task<bool> IsCreatorAsync(int gameNightId, string userId)
         {
-            return await dbContext.GameNights
-                .AnyAsync(g => g.Id == gameNightId && g.CreatorId == userId);
+            return await dbContext.GameNights.AnyAsync(g => g.Id == gameNightId && g.CreatorId == userId);
         }
 
     }

@@ -57,6 +57,16 @@ namespace Board_Game_Planner.Controllers
                     "Max guests cannot exceed the venue's capacity.");
             }
 
+            List<string> tooBigGames = (await gameNightService
+                .GetGamesNeedingMorePlayersAsync(model.SelectedGameIds, model.MaxGuests))
+                .ToList();
+
+            if (tooBigGames.Any())
+            {
+                ModelState.AddModelError(nameof(model.SelectedGameIds),
+                    $"These games need more players than the max guests allows: {string.Join(", ", tooBigGames)}.");
+            }
+
             if (!ModelState.IsValid)
             {
                 var fresh = await gameNightService.GetCreateModelAsync();
@@ -113,7 +123,22 @@ namespace Board_Game_Planner.Controllers
                 ModelState.AddModelError(nameof(model.MaxGuests),
                     "Max guests cannot exceed the venue's capacity.");
             }
+            List<string> tooBigGames = (await gameNightService
+            .GetGamesNeedingMorePlayersAsync(model.SelectedGameIds, model.MaxGuests))
+            .ToList();
 
+            if (tooBigGames.Any())
+            {
+                ModelState.AddModelError(nameof(model.SelectedGameIds),
+                    $"These games need more players than the max guests allows: {string.Join(", ", tooBigGames)}.");
+            }
+            int signedUpCount = await gameNightService.GetSignupCountAsync(model.Id);
+
+            if (model.MaxGuests < signedUpCount)
+            {
+                ModelState.AddModelError(nameof(model.MaxGuests),
+                    $"Max guests cannot be less than the {signedUpCount} people already signed up.");
+            }
             if (!ModelState.IsValid)
             {
                 var fresh = await gameNightService.GetCreateModelAsync();
