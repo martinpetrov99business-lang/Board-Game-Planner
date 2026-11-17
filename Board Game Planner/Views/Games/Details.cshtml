@@ -1,0 +1,54 @@
+﻿@model GameDetailsViewModel
+
+@{
+    ViewData["Title"] = Model.Title;
+}
+
+<h1>@Model.Title</h1>
+
+@if (!string.IsNullOrWhiteSpace(Model.ImageUrl))
+{
+    <img src="@Model.ImageUrl"
+         alt="@Model.Title"
+         class="img-fluid mb-3"
+         style="max-height: 300px;" />
+}
+
+<dl class="row">
+    <dt class="col-sm-3">Players</dt>
+    <dd class="col-sm-9">
+        @Model.MinPlayers - @Model.MaxPlayers
+    </dd>
+
+    <dt class="col-sm-3">Play Time</dt>
+    <dd class="col-sm-9">
+        @Model.PlayTimeMinutes min
+    </dd>
+
+    <dt class="col-sm-3">Complexity</dt>
+    <dd class="col-sm-9">
+        @Model.Complexity
+    </dd>
+
+    <dt class="col-sm-3">Description</dt>
+    <dd class="col-sm-9">
+        @(Model.Description ?? "No description.")
+    </dd>
+</dl>
+
+<a asp-action="Index" class="btn btn-secondary">Back to Games</a>
+
+@if (Model.IsCreator)
+{
+    <a asp-action="Edit"
+       asp-route-id="@Model.Id"
+       class="btn btn-warning">
+        Edit
+    </a>
+
+    <a asp-action="Delete"
+       asp-route-id="@Model.Id"
+       class="btn btn-danger">
+        Delete
+    </a>
+}

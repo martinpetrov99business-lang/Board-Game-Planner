@@ -1,0 +1,66 @@
+﻿@model IEnumerable<GameIndexViewModel>
+
+@{
+    ViewData["Title"] = "Games";
+}
+
+<h1>Games</h1>
+
+@if (User.Identity?.IsAuthenticated == true)
+{
+    <p>
+        <a asp-action="Create" class="btn btn-primary">
+            Create Game
+        </a>
+    </p>
+}
+
+@if (!Model.Any())
+{
+    <p>No games yet.</p>
+}
+
+<table class="table table-striped">
+    <thead>
+        <tr>
+            <th>Title</th>
+            <th>Players</th>
+            <th>Time</th>
+            <th>Complexity</th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var game in Model)
+        {
+            <tr>
+                <td>@game.Title</td>
+                <td>@game.MinPlayers - @game.MaxPlayers</td>
+                <td>@game.PlayTimeMinutes min</td>
+                <td>@game.Complexity</td>
+                <td>
+                    <a asp-action="Details"
+                       asp-route-id="@game.Id"
+                       class="btn btn-sm btn-info">
+                        Details
+                    </a>
+
+                    @if (game.IsCreator)
+                    {
+                        <a asp-action="Edit"
+                           asp-route-id="@game.Id"
+                           class="btn btn-sm btn-warning">
+                            Edit
+                        </a>
+
+                        <a asp-action="Delete"
+                           asp-route-id="@game.Id"
+                           class="btn btn-sm btn-danger">
+                            Delete
+                        </a>
+                    }
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
