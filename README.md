@@ -1,4 +1,4 @@
-						# Board Game Planner
+# Board Game Planner
 
 If you have ever played a board game that takes several sessions to finish,
 you know the hardest part: getting everyone to show up on the same date. This little app helps you organise your game nights.
